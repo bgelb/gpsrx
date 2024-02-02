@@ -1,0 +1,72 @@
+(kicad_sch (version 20230121) (generator eeschema)
+
+  (uuid c3c549bc-9d82-4b6a-bdb9-a3870905229d)
+
+  (paper "USLedger")
+
+  (title_block
+    (title "GPS Locked RX")
+    (date "2024-01-28")
+    (rev "0")
+    (company "Ben Gelb")
+  )
+
+  (lib_symbols
+  )
+
+
+  (sheet (at 355.6 78.74) (size 12.7 3.81) (fields_autoplaced)
+    (stroke (width 0.1524) (type solid))
+    (fill (color 0 0 0 0.0000))
+    (uuid 1b4527d9-1a53-4872-9983-970267f23268)
+    (property "Sheetname" "Power" (at 355.6 78.0284 0)
+      (effects (font (size 1.27 1.27)) (justify left bottom))
+    )
+    (property "Sheetfile" "power.kicad_sch" (at 355.6 83.1346 0)
+      (effects (font (size 1.27 1.27)) (justify left top))
+    )
+    (instances
+      (project "gpsrx"
+        (path "/c3c549bc-9d82-4b6a-bdb9-a3870905229d" (page "4"))
+      )
+    )
+  )
+
+  (sheet (at 351.79 67.31) (size 38.1 3.81) (fields_autoplaced)
+    (stroke (width 0.1524) (type solid))
+    (fill (color 0 0 0 0.0000))
+    (uuid 3652ad33-5463-42db-a556-b7970ca9c321)
+    (property "Sheetname" "Signal Connectors" (at 351.79 66.5984 0)
+      (effects (font (size 1.27 1.27)) (justify left bottom))
+    )
+    (property "Sheetfile" "connectors.kicad_sch" (at 351.79 71.7046 0)
+      (effects (font (size 1.27 1.27)) (justify left top))
+    )
+    (instances
+      (project "gpsrx"
+        (path "/c3c549bc-9d82-4b6a-bdb9-a3870905229d" (page "3"))
+      )
+    )
+  )
+
+  (sheet (at 356.87 43.18) (size 39.37 13.97) (fields_autoplaced)
+    (stroke (width 0.1524) (type solid))
+    (fill (color 0 0 0 0.0000))
+    (uuid 70e7e3a4-572d-4c59-9c26-94e3cd20e23c)
+    (property "Sheetname" "Clocks and GPS" (at 356.87 42.4684 0)
+      (effects (font (size 1.27 1.27)) (justify left bottom))
+    )
+    (property "Sheetfile" "clocks.kicad_sch" (at 356.87 57.7346 0)
+      (effects (font (size 1.27 1.27)) (justify left top))
+    )
+    (instances
+      (project "gpsrx"
+        (path "/c3c549bc-9d82-4b6a-bdb9-a3870905229d" (page "2"))
+      )
+    )
+  )
+
+  (sheet_instances
+    (path "/" (page "1"))
+  )
+)
