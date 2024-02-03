@@ -66,6 +66,23 @@
     )
   )
 
+  (sheet (at 358.14 96.52) (size 31.75 6.35) (fields_autoplaced)
+    (stroke (width 0.1524) (type solid))
+    (fill (color 0 0 0 0.0000))
+    (uuid 927dd695-6d3e-4555-8e99-f99aa71ecefd)
+    (property "Sheetname" "RF Frontend" (at 358.14 95.8084 0)
+      (effects (font (size 1.27 1.27)) (justify left bottom))
+    )
+    (property "Sheetfile" "rf_frontend.kicad_sch" (at 358.14 103.4546 0)
+      (effects (font (size 1.27 1.27)) (justify left top))
+    )
+    (instances
+      (project "gpsrx"
+        (path "/c3c549bc-9d82-4b6a-bdb9-a3870905229d" (page "5"))
+      )
+    )
+  )
+
   (sheet_instances
     (path "/" (page "1"))
   )

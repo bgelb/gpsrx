@@ -338,6 +338,10 @@
     [
       "1b4527d9-1a53-4872-9983-970267f23268",
       "Power"
+    ],
+    [
+      "927dd695-6d3e-4555-8e99-f99aa71ecefd",
+      "RF Frontend"
     ]
   ],
   "text_variables": {}
