@@ -342,6 +342,14 @@
     [
       "927dd695-6d3e-4555-8e99-f99aa71ecefd",
       "RF Frontend"
+    ],
+    [
+      "cfc19a79-2a34-431b-9452-a8a8f8302b67",
+      "MCU"
+    ],
+    [
+      "c7ab4c42-2f90-4fd3-a6d5-50b84165476b",
+      "DDC FPGA"
     ]
   ],
   "text_variables": {}

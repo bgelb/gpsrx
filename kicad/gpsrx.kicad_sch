@@ -83,6 +83,40 @@
     )
   )
 
+  (sheet (at 330.2 185.42) (size 43.18 3.81) (fields_autoplaced)
+    (stroke (width 0.1524) (type solid))
+    (fill (color 0 0 0 0.0000))
+    (uuid c7ab4c42-2f90-4fd3-a6d5-50b84165476b)
+    (property "Sheetname" "DDC FPGA" (at 330.2 184.7084 0)
+      (effects (font (size 1.27 1.27)) (justify left bottom))
+    )
+    (property "Sheetfile" "ddc_fpga.kicad_sch" (at 330.2 189.8146 0)
+      (effects (font (size 1.27 1.27)) (justify left top))
+    )
+    (instances
+      (project "gpsrx"
+        (path "/c3c549bc-9d82-4b6a-bdb9-a3870905229d" (page "7"))
+      )
+    )
+  )
+
+  (sheet (at 323.85 162.56) (size 39.37 3.81) (fields_autoplaced)
+    (stroke (width 0.1524) (type solid))
+    (fill (color 0 0 0 0.0000))
+    (uuid cfc19a79-2a34-431b-9452-a8a8f8302b67)
+    (property "Sheetname" "MCU" (at 323.85 161.8484 0)
+      (effects (font (size 1.27 1.27)) (justify left bottom))
+    )
+    (property "Sheetfile" "mcu.kicad_sch" (at 323.85 166.9546 0)
+      (effects (font (size 1.27 1.27)) (justify left top))
+    )
+    (instances
+      (project "gpsrx"
+        (path "/c3c549bc-9d82-4b6a-bdb9-a3870905229d" (page "6"))
+      )
+    )
+  )
+
   (sheet_instances
     (path "/" (page "1"))
   )
