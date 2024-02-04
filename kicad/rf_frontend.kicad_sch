@@ -504,6 +504,10 @@
     (effects (font (size 2 2)) (justify left bottom))
     (uuid aa37fdf2-6a1e-4e7d-a982-9890b90337f0)
   )
+  (text "ADC SAMPLE RATE = 4.8MHz" (at 332.74 125.73 0)
+    (effects (font (size 1.27 1.27)) (justify left bottom))
+    (uuid dc73aebd-350a-4c38-bddc-4a6a3f549fb0)
+  )
 
   (global_label "ADC_DAT_N" (shape output) (at 317.5 139.7 0) (fields_autoplaced)
     (effects (font (size 1.27 1.27)) (justify left))
