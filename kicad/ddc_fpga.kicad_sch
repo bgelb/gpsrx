@@ -1035,7 +1035,7 @@
     (property "Reference" "R23" (at 199.39 92.71 90)
       (effects (font (size 1.27 1.27)))
     )
-    (property "Value" "22" (at 199.39 95.25 90)
+    (property "Value" "0" (at 199.39 95.25 90)
       (effects (font (size 1.27 1.27)))
     )
     (property "Footprint" "" (at 199.644 96.774 90)
