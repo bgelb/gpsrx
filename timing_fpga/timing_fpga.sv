@@ -16,7 +16,7 @@ module timing_fpga (
 
 localparam ClocksPerSecond = 19200000;
 localparam PpsPulseWidth = 1920; // 100us
-localparam SlowClockHalfPeriod = 960; // 10kHz
+localparam SlowClockPeriod = 1920; // 10kHz
 
 // reset sync
 logic rst;
@@ -38,17 +38,16 @@ assign rst = rst_p1;
 assign clk_uc = clk_tf;
 
 // slow clk
-logic [$clog2(SlowClockHalfPeriod)-1:0] slow_clock_count;
-logic slow_clock;
+logic [$clog2(SlowClockPeriod)-1:0] slow_clock_count;
+assign slow_clock_rise_next = (slow_clock_count == SlowClockPeriod-1);
+assign slow_clock_fall_next = (slow_clock_count == (SlowClockPeriod/2)-1);
 
 always_ff @(posedge clk_tf) begin
   if(rst) begin
     slow_clock_count <= '0;
-    slow_clock <= 1'b1;
   end
-  else if (slow_clock_count == SlowClockHalfPeriod-1) begin
+  else if (slow_clock_rise_next) begin
     slow_clock_count <= '0;
-    slow_clock <= ~slow_clock;
   end
   else
     slow_clock_count <= slow_clock_count + 1'b1;
@@ -57,12 +56,17 @@ end
 
 // "clean" pps
 logic [$clog2(ClocksPerSecond)-1:0] pps_count;
+logic pps_rise_next;
+
+assign pps_rise_next = (pps_count == ClocksPerSecond-1);
+assign pps_fall_next = (pps_count == PpsPulseWidth-1);
+assign pps_pulse_next = (pps_count < PpsPulseWidth || pps_count == ClocksPerSecond-1);
 
 always_ff @(posedge clk_tf) begin
   if(rst) begin
     pps_count <= '0;
   end
-  else if (pps_count == ClocksPerSecond-1) begin
+  else if (pps_rise_next) begin
     pps_count <= '0;
   end
   else begin
@@ -70,29 +74,50 @@ always_ff @(posedge clk_tf) begin
   end
 end
 
-// these are meant to indicate the next rising edge is the top of second
-assign tos_mark_ddc = (pps_count == ClocksPerSecond-1);
-assign pps_clean_next = (pps_count == ClocksPerSecond-1);
+// these are meant to indicate the next rising edge of clk_tf is the top of second
+assign tos_mark_ddc = pps_rise_next; // 1 cycle pulse
+assign pps_clean_next = pps_pulse_next; // many cycle pulse
 
-// this PPS is async. the edge itself indicates PPS.
+// we flop this internally, so the rising edge of pps_clean_uc is
+// really at the top of second and doesn't need conditioning on a clock edge
 always_ff @(posedge clk_tf) begin
   if(rst) begin
-    pps_clean_uc <= 1'b0;
-  end
-  else if (pps_count == ClocksPerSecond-1) begin
     pps_clean_uc <= 1'b1;
   end
-  else if(pps_count == PpsPulseWidth-1) begin
-    pps_clean_uc <= 1'b0;
-  end
+	else begin
+		pps_clean_uc <= pps_pulse_next;
+	end
 end
 
 // stop logic
-// TODO: output the first pulse of slow_clock that is more than 156.25ns after the arrival of pps_raw_logic
+// TODO: output the first pulse of slow_clock that is safely after the arrival of pps_raw_logic
+logic pps_raw_d1, pps_raw_d2, pps_raw_d3;
+logic pps_arrived;
+logic stop_pending;
+
 always @(posedge clk_tf) begin
+	// sync the pps signal, and add 1-2 cycles of clk_tf delay in the process
   pps_raw_d1 <= pps_raw_logic;
   pps_raw_d2 <= pps_raw_d1;
   pps_raw_d3 <= pps_raw_d2;
+end
+
+assign pps_raw_rise_next = (pps_raw_d2 && !pps_raw_d3);
+
+// compute enables for passing slow_clock pulses
+always @(posedge clk_tf) begin
+	if (pps_raw_rise_next) begin
+		// next slow clock will pick up pps_pending and emit stop
+		pps_arrived <= 1'b1;
+		stop_pending <= 1'b1;
+	end
+	else if (slow_clock_fall_next) begin
+		stop_pending <= 1'b0;
+	end
+	else if (pps_rise_next) begin
+		pps_arrived <= 1'b0;
+		stop_pending <= 1'b0;
+	end
 end
 
 
