@@ -1,4 +1,9 @@
-module timing_fpga (
+module timing_fpga #(
+  parameter ClocksPerSecond = 19200000;
+  parameter PpsPulseWidth = 1920; // 100us
+  parameter SlowClockPeriod = 1920; // 10kHz
+)
+(
   input logic clk_tf,
   input logic tf_reset_l,
   input logic pps_raw_logic,
@@ -14,14 +19,11 @@ module timing_fpga (
   output logic pps_clean_next
 );
 
-localparam ClocksPerSecond = 19200000;
-localparam PpsPulseWidth = 1920; // 100us
-localparam SlowClockPeriod = 1920; // 10kHz
 
-// reset sync
+// sync reset
 logic rst;
 logic rst_p1, rst_p0;
-always_ff @(posedge clk_tf or negedge tf_reset_l) begin
+always_ff @(posedge clk_tf) begin
   if(!tf_reset_l) begin
     rst_p1 <= 1'b1;
     rst_p0 <= 1'b1;
@@ -32,7 +34,7 @@ always_ff @(posedge clk_tf or negedge tf_reset_l) begin
   end
 end
 
-assign rst = rst_p1;
+assign rst = rst_p0;
 
 // forward clk to uC
 assign clk_uc = clk_tf;
@@ -41,6 +43,7 @@ assign clk_uc = clk_tf;
 logic [$clog2(SlowClockPeriod)-1:0] slow_clock_count;
 assign slow_clock_rise_next = (slow_clock_count == SlowClockPeriod-1);
 assign slow_clock_fall_next = (slow_clock_count == (SlowClockPeriod/2)-1);
+assign slow_clock_next = (slow_clock_count < (SlowClockPeriod/2) || slow_clock_count == (SlowClockPeriod-1));
 
 always_ff @(posedge clk_tf) begin
   if(rst) begin
@@ -90,37 +93,81 @@ always_ff @(posedge clk_tf) begin
 end
 
 // stop logic
-// TODO: output the first pulse of slow_clock that is safely after the arrival of pps_raw_logic
 logic pps_raw_d1, pps_raw_d2, pps_raw_d3;
-logic pps_arrived;
-logic stop_pending;
+logic pps_raw_rise;
 
+// sync the pps signal, find the rising edge
+// this adds delay greater than the minimum TDC start->stop time
+assign pps_raw_rise = (pps_raw_d2 && !pps_raw_d3);
 always @(posedge clk_tf) begin
-	// sync the pps signal, and add 1-2 cycles of clk_tf delay in the process
-  pps_raw_d1 <= pps_raw_logic;
-  pps_raw_d2 <= pps_raw_d1;
-  pps_raw_d3 <= pps_raw_d2;
+  if(rst) begin
+    pps_raw_d1 <= 1'b0;
+    pps_raw_d2 <= 1'b0;
+    pps_raw_d3 <= 1'b0;
+  end
+  else begin
+    pps_raw_d1 <= pps_raw_logic;
+    pps_raw_d2 <= pps_raw_d1;
+    pps_raw_d3 <= pps_raw_d2;
+  end
 end
 
-assign pps_raw_rise_next = (pps_raw_d2 && !pps_raw_d3);
+enum logic [1:0] {
+  S_idle,
+  S_arm,
+  S_stop,
+  S_wait
+} stop_state, stop_state_next;
 
-// compute enables for passing slow_clock pulses
-always @(posedge clk_tf) begin
-	if (pps_raw_rise_next) begin
-		// next slow clock will pick up pps_pending and emit stop
-		pps_arrived <= 1'b1;
-		stop_pending <= 1'b1;
-	end
-	else if (slow_clock_fall_next) begin
-		stop_pending <= 1'b0;
-	end
-	else if (pps_rise_next) begin
-		pps_arrived <= 1'b0;
-		stop_pending <= 1'b0;
-	end
+always_comb begin
+  stop_state_next = stop_state;
+  case (stop_state)
+    S_idle: begin
+      if(pps_raw_rise) begin
+        stop_state_next = S_arm;
+      end
+    end
+    S_arm: begin
+      if(slow_clock_rise_next) begin
+        stop_state_next = S_stop;
+      end
+    end
+    S_stop: begin
+      if(slow_clock_fall_next) begin
+        stop_state_next = S_wait;
+      end
+    end
+    S_wait: begin
+      if(pps_rise_next) begin
+        stop_state_next = S_idle;
+      end
+    end
+  endcase
 end
 
+always_ff @(posedge clk_tf) begin
+  if(rst) begin
+    stop_state <= S_idle;
+  end
+  else begin
+    stop_state <= stop_state_next;
+  end
+end
 
-// TODO: output the pulses of slow_clock between TOS and the stop pulse
-// (so the UC can figure out how far into the second the stop pulse is)
+// stop output (to be flopped on clk_tf externally)
+assign tdc_stop_next = (stop_state_next == S_stop);
+
+// tos count output (flopped internally, here)
+always_ff @(posedge clk_tf) begin
+  if(rst) begin
+    stop_tos_count <= 1'b1;
+  end
+  else if(stop_state_next == S_idle) begin
+    stop_tos_count <= stop_clock_next;
+  end
+  else begin
+    stop_tos_count <= 1'b0;
+  end
+end
+
 endmodule
