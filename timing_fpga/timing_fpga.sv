@@ -1,7 +1,7 @@
 module timing_fpga #(
-  parameter ClocksPerSecond = 19200000;
-  parameter PpsPulseWidth = 1920; // 100us
-  parameter SlowClockPeriod = 1920; // 10kHz
+  parameter ClocksPerSecond = 19200000,
+  parameter PpsPulseWidth =   1920, // 100us
+  parameter SlowClockPeriod = 1920  // 10kHz
 )
 (
   input logic clk_tf,
@@ -52,7 +52,7 @@ always_ff @(posedge clk_tf) begin
   else if (slow_clock_rise_next) begin
     slow_clock_count <= '0;
   end
-  else
+  else begin
     slow_clock_count <= slow_clock_count + 1'b1;
   end
 end
@@ -163,7 +163,7 @@ always_ff @(posedge clk_tf) begin
     stop_tos_count <= 1'b1;
   end
   else if(stop_state_next == S_idle) begin
-    stop_tos_count <= stop_clock_next;
+    stop_tos_count <= slow_clock_next;
   end
   else begin
     stop_tos_count <= 1'b0;
