@@ -1,0 +1,7 @@
+*.bak
+*cache
+*-backups/
+*.pdf
+*.lck
+*autosave*
+*auto_save*
