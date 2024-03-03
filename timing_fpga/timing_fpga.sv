@@ -29,7 +29,7 @@ always_ff @(posedge clk_tf) begin
     rst_p0 <= 1'b1;
   end
   else begin
-    rst_p1 <= 1'b1;
+    rst_p1 <= 1'b0;
     rst_p0 <= rst_p1;
   end
 end
@@ -43,7 +43,7 @@ assign clk_uc = clk_tf;
 logic [$clog2(SlowClockPeriod)-1:0] slow_clock_count;
 assign slow_clock_rise_next = (slow_clock_count == SlowClockPeriod-1);
 assign slow_clock_fall_next = (slow_clock_count == (SlowClockPeriod/2)-1);
-assign slow_clock_next = (slow_clock_count < (SlowClockPeriod/2) || slow_clock_count == (SlowClockPeriod-1));
+assign slow_clock_next = (slow_clock_count < (SlowClockPeriod/2)-1 || slow_clock_count == SlowClockPeriod-1);
 
 always_ff @(posedge clk_tf) begin
   if(rst) begin
@@ -162,7 +162,7 @@ always_ff @(posedge clk_tf) begin
   if(rst) begin
     stop_tos_count <= 1'b1;
   end
-  else if(stop_state_next == S_idle) begin
+  else if(stop_state_next == S_idle || stop_state_next == S_arm) begin
     stop_tos_count <= slow_clock_next;
   end
   else begin
