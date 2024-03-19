@@ -20,6 +20,8 @@ module timing_fpga #(
 );
 
 
+localparam SlowClocksPerSecond = ClocksPerSecond/SlowClockPeriod;
+
 // sync reset
 logic rst;
 logic rst_p1, rst_p0;
@@ -119,6 +121,9 @@ enum logic [1:0] {
   S_wait
 } stop_state, stop_state_next;
 
+logic [$clog2(SlowClocksPerSecond)-1:0] stop_delay_count, stop_delay_count_next;
+logic stop_count_pulse, stop_count_pulse_next;
+
 always_comb begin
   stop_state_next = stop_state;
   case (stop_state)
@@ -143,31 +148,43 @@ always_comb begin
       end
     end
   endcase
+
+  // delay counter increments prior to stop, then sends a number of pulses equal to the count out of stop_count_pulse
+  stop_delay_count_next = stop_delay_count;
+  stop_count_pulse_next = 0;
+  if(stop_state == S_idle && slow_clock_rise_next) begin
+    stop_delay_count_next = stop_delay_count + 1'b1;
+  end
+  else if(stop_state != S_idle) begin
+    if(stop_delay_count > 0) begin
+      if(stop_count_pulse == 1'b1) begin
+        stop_count_pulse_next = 1'b0;
+        stop_delay_count_next = stop_delay_count - 1'b1;
+      end
+      else begin
+        stop_count_pulse_next = 1'b1;
+      end
+    end
+  end
 end
 
 always_ff @(posedge clk_tf) begin
   if(rst) begin
     stop_state <= S_idle;
+    stop_delay_count <= '0;
+    stop_count_pulse <= 1'b0;
   end
   else begin
     stop_state <= stop_state_next;
+    stop_delay_count <= stop_delay_count_next;
+    stop_count_pulse <= stop_count_pulse_next;
   end
 end
+
+// stop count output
+assign stop_tos_count = stop_count_pulse;
 
 // stop output (to be flopped on clk_tf externally)
 assign tdc_stop_next = (stop_state_next == S_stop);
-
-// tos count output (flopped internally, here)
-always_ff @(posedge clk_tf) begin
-  if(rst) begin
-    stop_tos_count <= 1'b1;
-  end
-  else if(stop_state_next == S_idle || stop_state_next == S_arm) begin
-    stop_tos_count <= slow_clock_next;
-  end
-  else begin
-    stop_tos_count <= 1'b0;
-  end
-end
 
 endmodule
