@@ -23,20 +23,20 @@ module timing_fpga #(
 localparam SlowClocksPerSecond = ClocksPerSecond/SlowClockPeriod;
 
 // sync reset
-logic rst;
+logic rst_l;
 logic rst_p1, rst_p0;
-always_ff @(posedge clk_tf) begin
+always_ff @(posedge clk_tf or negedge tf_reset_l) begin
   if(!tf_reset_l) begin
-    rst_p1 <= 1'b1;
-    rst_p0 <= 1'b1;
+    rst_p1 <= 1'b0;
+    rst_p0 <= 1'b0;
   end
   else begin
-    rst_p1 <= 1'b0;
+    rst_p1 <= 1'b1;
     rst_p0 <= rst_p1;
   end
 end
 
-assign rst = rst_p0;
+assign rst_l = rst_p0;
 
 // forward clk to uC
 assign clk_uc = clk_tf;
@@ -47,8 +47,8 @@ assign slow_clock_rise_next = (slow_clock_count == SlowClockPeriod-1);
 assign slow_clock_fall_next = (slow_clock_count == (SlowClockPeriod/2)-1);
 assign slow_clock_next = (slow_clock_count < (SlowClockPeriod/2)-1 || slow_clock_count == SlowClockPeriod-1);
 
-always_ff @(posedge clk_tf) begin
-  if(rst) begin
+always_ff @(posedge clk_tf or negedge rst_l) begin
+  if(!rst_l) begin
     slow_clock_count <= '0;
   end
   else if (slow_clock_rise_next) begin
@@ -67,8 +67,8 @@ assign pps_rise_next = (pps_count == ClocksPerSecond-1);
 assign pps_fall_next = (pps_count == PpsPulseWidth-1);
 assign pps_pulse_next = (pps_count < PpsPulseWidth || pps_count == ClocksPerSecond-1);
 
-always_ff @(posedge clk_tf) begin
-  if(rst) begin
+always_ff @(posedge clk_tf or negedge rst_l) begin
+  if(!rst_l) begin
     pps_count <= '0;
   end
   else if (pps_rise_next) begin
@@ -85,8 +85,8 @@ assign pps_clean_next = pps_pulse_next; // many cycle pulse
 
 // we flop this internally, so the rising edge of pps_clean_uc is
 // really at the top of second and doesn't need conditioning on a clock edge
-always_ff @(posedge clk_tf) begin
-  if(rst) begin
+always_ff @(posedge clk_tf or negedge rst_l) begin
+  if(!rst_l) begin
     pps_clean_uc <= 1'b1;
   end
 	else begin
@@ -101,8 +101,8 @@ logic pps_raw_rise;
 // sync the pps signal, find the rising edge
 // this adds delay greater than the minimum TDC start->stop time
 assign pps_raw_rise = (pps_raw_d2 && !pps_raw_d3);
-always @(posedge clk_tf) begin
-  if(rst) begin
+always @(posedge clk_tf or negedge rst_l) begin
+  if(!rst_l) begin
     pps_raw_d1 <= 1'b0;
     pps_raw_d2 <= 1'b0;
     pps_raw_d3 <= 1'b0;
@@ -168,8 +168,8 @@ always_comb begin
   end
 end
 
-always_ff @(posedge clk_tf) begin
-  if(rst) begin
+always_ff @(posedge clk_tf or negedge rst_l) begin
+  if(!rst_l) begin
     stop_state <= S_idle;
     stop_delay_count <= '0;
     stop_count_pulse <= 1'b0;
