@@ -1,3 +1,6 @@
+a.out
+*.vcd
+*.DS_Store
 *.bak
 *cache
 *-backups/
