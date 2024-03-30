@@ -52,12 +52,12 @@ always_ff @(posedge clk_tf or negedge rst_l) begin
   if(!rst_l) begin
     slow_clock_rise_next <= 1'b0;
     slow_clock_fall_next <= 1'b0;
-    slow_clock_next <= 1'b0;
+    slow_clock_next <= 1'b1;
   end
   else begin
     slow_clock_rise_next <= (slow_clock_count == SlowClockPeriod-2);
     slow_clock_fall_next <= (slow_clock_count == (SlowClockPeriod/2)-2);
-    slow_clock_next <= (slow_clock_count < (SlowClockPeriod/2)-2 || slow_clock_count == SlowClockPeriod-2);
+    slow_clock_next <= (slow_clock_count < (SlowClockPeriod/2)-2 || slow_clock_count == SlowClockPeriod-2 || slow_clock_count == SlowClockPeriod-1);
   end
 end
 
@@ -66,7 +66,7 @@ always_ff @(posedge clk_tf or negedge rst_l) begin
   if(!rst_l) begin
     slow_clock_count <= '0;
   end
-  else if (slow_clock_rise_next || pps_pulse_next) begin
+  else if (slow_clock_rise_next || pps_rise_next) begin
     slow_clock_count <= '0;
   end
   else begin
@@ -86,11 +86,11 @@ logic pps_rise_next, pps_pulse_next;
 always_ff @(posedge clk_tf or negedge rst_l) begin
   if(!rst_l) begin
     pps_rise_next <= 1'b0;
-    pps_pulse_next <= 1'b0;
+    pps_pulse_next <= 1'b1;
   end
   else begin
     pps_rise_next <= (pps_count == ClocksPerSecond-2);
-    pps_pulse_next <= (pps_count < PpsPulseWidth-2 || pps_count == ClocksPerSecond-2);
+    pps_pulse_next <= (pps_count < PpsPulseWidth-2 || pps_count == ClocksPerSecond-2 || pps_count == ClocksPerSecond-1);
   end
 end
 
@@ -134,8 +134,7 @@ end
 enum logic [1:0] {
   S_idle = 2'h0,
   S_arm = 2'h1,
-  S_stop = 2'h2,
-  S_wait = 2'h3
+  S_stop = 2'h2
 } stop_state, stop_state_next;
 
 always_comb begin
@@ -153,11 +152,6 @@ always_comb begin
     end
     S_stop: begin
       if(slow_clock_fall_next) begin
-        stop_state_next = S_wait;
-      end
-    end
-    S_wait: begin
-      if(pps_rise_next) begin
         stop_state_next = S_idle;
       end
     end
@@ -182,7 +176,7 @@ logic int_uc_slow_clock_pre;
 // add 1 clk_tf cycle delay in uc_slow_clock, so that pps_next and stop_next can have 1 cycle setup
 always_ff @(posedge clk_tf or negedge rst_l) begin
   if(!rst_l) begin
-    int_uc_slow_clock_pre <= 1'b0;
+    int_uc_slow_clock_pre <= 1'b1;
     uc_slow_clock <= 1'b0;
   end
   else begin
@@ -197,7 +191,7 @@ end
 // uC will sample them upon seeing rising edge of uc_slow_clk
 always @(posedge clk_tf) begin
   if(!rst_l) begin
-    uc_pps_next <= 1'b0;
+    uc_pps_next <= 1'b1;
     uc_stop_next <= 1'b0;
     uc_stop_done <= 1'b0;
   end

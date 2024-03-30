@@ -45,19 +45,21 @@ end
 
 timing_fpga #(
   .ClocksPerSecond(10000),    // 10kHz
-  .PpsPulseWidth(100),       // 10ms
+  .PpsPulseWidth(10),       // 10ms
   .SlowClockPeriod(100)      // 100Hz
 ) timing_fpga_dut (
   .clk_tf(clk),
   .tf_reset_l(rst_l),
   .pps_raw_logic(pps_raw),
   //
-  .clk_uc(),
-  .pps_clean_uc(),
-  .stop_tos_count(),
   .tos_mark_ddc(),
   .tdc_stop_next(),
-  .pps_clean_next()
+  .pps_clean_next(),
+  //
+  .uc_slow_clock(),
+  .uc_pps_next(),
+  .uc_stop_next(),
+  .uc_stop_done()
 );
 
 endmodule
