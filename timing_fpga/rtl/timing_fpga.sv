@@ -8,9 +8,10 @@ module timing_fpga #(
   input logic tf_reset_l,
   input logic pps_raw_logic,
   // uC interface
-  output logic clk_uc,
-  output logic pps_clean_uc,
-  output logic stop_tos_count,
+  output logic uc_slow_clock,
+  output logic uc_pps_next,
+  output logic uc_stop_next,
+  output logic uc_stop_done,
   // DDC interface
   output logic tos_mark_ddc,
   // TDC interface
@@ -38,20 +39,34 @@ end
 
 assign rst_l = rst_p0;
 
-// forward clk to uC
-assign clk_uc = clk_tf;
-
 // slow clk
 logic [$clog2(SlowClockPeriod)-1:0] slow_clock_count;
-assign slow_clock_rise_next = (slow_clock_count == SlowClockPeriod-1);
-assign slow_clock_fall_next = (slow_clock_count == (SlowClockPeriod/2)-1);
-assign slow_clock_next = (slow_clock_count < (SlowClockPeriod/2)-1 || slow_clock_count == SlowClockPeriod-1);
+logic slow_clock_rise_next, slow_clock_fall_next, slow_clock_next;
+
+// make the below (commented) assignments, but flopped for timing
+// assign slow_clock_rise_next = (slow_clock_count == SlowClockPeriod-1);
+// assign slow_clock_fall_next = (slow_clock_count == (SlowClockPeriod/2)-1);
+// assign slow_clock_next = (slow_clock_count < (SlowClockPeriod/2)-1 || slow_clock_count == SlowClockPeriod-1);
+
+always_ff @(posedge clk_tf or negedge rst_l) begin
+  if(!rst_l) begin
+    slow_clock_rise_next <= 1'b0;
+    slow_clock_fall_next <= 1'b0;
+    slow_clock_next <= 1'b0;
+  end
+  else begin
+    slow_clock_rise_next <= (slow_clock_count == SlowClockPeriod-2);
+    slow_clock_fall_next <= (slow_clock_count == (SlowClockPeriod/2)-2);
+    slow_clock_next <= (slow_clock_count < (SlowClockPeriod/2)-2 || slow_clock_count == SlowClockPeriod-2);
+  end
+end
+
 
 always_ff @(posedge clk_tf or negedge rst_l) begin
   if(!rst_l) begin
     slow_clock_count <= '0;
   end
-  else if (slow_clock_rise_next) begin
+  else if (slow_clock_rise_next || pps_pulse_next) begin
     slow_clock_count <= '0;
   end
   else begin
@@ -61,11 +76,24 @@ end
 
 // "clean" pps
 logic [$clog2(ClocksPerSecond)-1:0] pps_count;
-logic pps_rise_next;
+logic pps_rise_next, pps_pulse_next;
 
-assign pps_rise_next = (pps_count == ClocksPerSecond-1);
-assign pps_fall_next = (pps_count == PpsPulseWidth-1);
-assign pps_pulse_next = (pps_count < PpsPulseWidth || pps_count == ClocksPerSecond-1);
+// make the below (commented) assignments, but flopped for timing
+// assign pps_rise_next = (pps_count == ClocksPerSecond-1);
+// assign pps_fall_next = (pps_count == PpsPulseWidth-1);
+// assign pps_pulse_next = (pps_count < PpsPulseWidth-1 || pps_count == ClocksPerSecond-1);
+
+always_ff @(posedge clk_tf or negedge rst_l) begin
+  if(!rst_l) begin
+    pps_rise_next <= 1'b0;
+    pps_pulse_next <= 1'b0;
+  end
+  else begin
+    pps_rise_next <= (pps_count == ClocksPerSecond-2);
+    pps_pulse_next <= (pps_count < PpsPulseWidth-2 || pps_count == ClocksPerSecond-2);
+  end
+end
+
 
 always_ff @(posedge clk_tf or negedge rst_l) begin
   if(!rst_l) begin
@@ -82,17 +110,6 @@ end
 // these are meant to indicate the next rising edge of clk_tf is the top of second
 assign tos_mark_ddc = pps_rise_next; // 1 cycle pulse
 assign pps_clean_next = pps_pulse_next; // many cycle pulse
-
-// we flop this internally, so the rising edge of pps_clean_uc is
-// really at the top of second and doesn't need conditioning on a clock edge
-always_ff @(posedge clk_tf or negedge rst_l) begin
-  if(!rst_l) begin
-    pps_clean_uc <= 1'b1;
-  end
-	else begin
-		pps_clean_uc <= pps_pulse_next;
-	end
-end
 
 // stop logic
 logic pps_raw_d1, pps_raw_d2, pps_raw_d3;
@@ -115,14 +132,11 @@ always @(posedge clk_tf or negedge rst_l) begin
 end
 
 enum logic [1:0] {
-  S_idle,
-  S_arm,
-  S_stop,
-  S_wait
+  S_idle = 2'h0,
+  S_arm = 2'h1,
+  S_stop = 2'h2,
+  S_wait = 2'h3
 } stop_state, stop_state_next;
-
-logic [$clog2(SlowClocksPerSecond)-1:0] stop_delay_count, stop_delay_count_next;
-logic stop_count_pulse, stop_count_pulse_next;
 
 always_comb begin
   stop_state_next = stop_state;
@@ -148,43 +162,50 @@ always_comb begin
       end
     end
   endcase
-
-  // delay counter increments prior to stop, then sends a number of pulses equal to the count out of stop_count_pulse
-  stop_delay_count_next = stop_delay_count;
-  stop_count_pulse_next = 0;
-  if(stop_state == S_idle && slow_clock_rise_next) begin
-    stop_delay_count_next = stop_delay_count + 1'b1;
-  end
-  else if(stop_state != S_idle) begin
-    if(stop_delay_count > 0) begin
-      if(stop_count_pulse == 1'b1) begin
-        stop_count_pulse_next = 1'b0;
-        stop_delay_count_next = stop_delay_count - 1'b1;
-      end
-      else begin
-        stop_count_pulse_next = 1'b1;
-      end
-    end
-  end
 end
 
 always_ff @(posedge clk_tf or negedge rst_l) begin
   if(!rst_l) begin
     stop_state <= S_idle;
-    stop_delay_count <= '0;
-    stop_count_pulse <= 1'b0;
   end
   else begin
     stop_state <= stop_state_next;
-    stop_delay_count <= stop_delay_count_next;
-    stop_count_pulse <= stop_count_pulse_next;
   end
 end
 
-// stop count output
-assign stop_tos_count = stop_count_pulse;
-
 // stop output (to be flopped on clk_tf externally)
 assign tdc_stop_next = (stop_state_next == S_stop);
+
+// uC interface
+logic int_uc_slow_clock_pre;
+
+// add 1 clk_tf cycle delay in uc_slow_clock, so that pps_next and stop_next can have 1 cycle setup
+always_ff @(posedge clk_tf or negedge rst_l) begin
+  if(!rst_l) begin
+    int_uc_slow_clock_pre <= 1'b0;
+    uc_slow_clock <= 1'b0;
+  end
+  else begin
+    int_uc_slow_clock_pre <= slow_clock_next;
+    uc_slow_clock <= int_uc_slow_clock_pre;
+  end
+end
+
+// these must be valid 1 clk_tf cycle prior to uc_slow_clk edge as seen by uC
+// and held until falling edge of uc_slow_clk
+//
+// uC will sample them upon seeing rising edge of uc_slow_clk
+always @(posedge clk_tf) begin
+  if(!rst_l) begin
+    uc_pps_next <= 1'b0;
+    uc_stop_next <= 1'b0;
+    uc_stop_done <= 1'b0;
+  end
+  else if(slow_clock_rise_next) begin
+    uc_pps_next <= pps_rise_next;
+    uc_stop_next <= (stop_state_next == S_stop);
+    uc_stop_done <= uc_stop_next; // uc_stop_next shifted out by 1 uc_slow_clk
+  end
+end
 
 endmodule

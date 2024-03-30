@@ -51,3 +51,10 @@ set_global_assignment -name ERROR_CHECK_FREQUENCY_DIVISOR "-1"
 set_global_assignment -name SDC_FILE timing_fpga.sdc
 set_global_assignment -name SYSTEMVERILOG_FILE ../rtl/timing_fpga.sv
 set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "NO HEAT SINK WITH STILL AIR"
+set_global_assignment -name TIMING_ANALYZER_DO_REPORT_TIMING ON
+set_global_assignment -name TIMING_ANALYZER_MULTICORNER_ANALYSIS ON
+set_global_assignment -name REMOVE_REDUNDANT_LOGIC_CELLS ON
+
+set_global_assignment -name ROUTER_TIMING_OPTIMIZATION_LEVEL MAXIMUM
+set_global_assignment -name OPTIMIZE_MULTI_CORNER_TIMING OFF
+set_global_assignment -name OPTIMIZATION_MODE "AGGRESSIVE AREA"
