@@ -350,6 +350,10 @@
     [
       "c7ab4c42-2f90-4fd3-a6d5-50b84165476b",
       "DDC FPGA"
+    ],
+    [
+      "c578a973-c3ec-43d9-a435-a55d342147d7",
+      "LTE Radio"
     ]
   ],
   "text_variables": {}

@@ -83,6 +83,23 @@
     )
   )
 
+  (sheet (at 127 142.24) (size 52.07 10.16) (fields_autoplaced)
+    (stroke (width 0.1524) (type solid))
+    (fill (color 0 0 0 0.0000))
+    (uuid c578a973-c3ec-43d9-a435-a55d342147d7)
+    (property "Sheetname" "LTE Radio" (at 127 141.5284 0)
+      (effects (font (size 1.27 1.27)) (justify left bottom))
+    )
+    (property "Sheetfile" "lte_radio.kicad_sch" (at 127 152.9846 0)
+      (effects (font (size 1.27 1.27)) (justify left top))
+    )
+    (instances
+      (project "gpsrx"
+        (path "/c3c549bc-9d82-4b6a-bdb9-a3870905229d" (page "8"))
+      )
+    )
+  )
+
   (sheet (at 330.2 185.42) (size 43.18 3.81) (fields_autoplaced)
     (stroke (width 0.1524) (type solid))
     (fill (color 0 0 0 0.0000))
