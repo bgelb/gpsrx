@@ -8433,7 +8433,6 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "46c73c53-0a85-4a35-925e-0d99961e7537")
 		(property "Reference" "R91"
 			(at 144.78 142.24 0)
@@ -11300,7 +11299,6 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "adcad876-a79a-4895-a266-edf62b5c99c7")
 		(property "Reference" "R92"
 			(at 161.29 153.67 0)

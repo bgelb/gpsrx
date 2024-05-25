@@ -5308,6 +5308,17 @@
 		)
 		(uuid "1eb8b9e1-089f-4eb3-b880-f7d109df3eeb")
 	)
+	(label "USB_D-"
+		(at 92.71 209.55 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "238d4187-6eec-4825-b670-9ad0e45e1452")
+	)
 	(label "SDA_UC"
 		(at 267.97 133.35 0)
 		(fields_autoplaced yes)
@@ -5373,6 +5384,17 @@
 			(justify left bottom)
 		)
 		(uuid "6d9d499d-b1bb-4e0a-9b6c-91146febbeb1")
+	)
+	(label "USB_D+"
+		(at 92.71 212.09 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "6e124935-b70b-49fd-a38a-fae53203f5fe")
 	)
 	(label "SPI_MOSI_UC"
 		(at 134.62 113.03 0)
