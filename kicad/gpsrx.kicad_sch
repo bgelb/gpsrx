@@ -1,140 +1,285 @@
-(kicad_sch (version 20230121) (generator eeschema)
-
-  (uuid c3c549bc-9d82-4b6a-bdb9-a3870905229d)
-
-  (paper "USLedger")
-
-  (title_block
-    (title "GPS Locked RX")
-    (date "2024-01-28")
-    (rev "0")
-    (company "Ben Gelb")
-  )
-
-  (lib_symbols
-  )
-
-
-  (sheet (at 355.6 78.74) (size 12.7 3.81) (fields_autoplaced)
-    (stroke (width 0.1524) (type solid))
-    (fill (color 0 0 0 0.0000))
-    (uuid 1b4527d9-1a53-4872-9983-970267f23268)
-    (property "Sheetname" "Power" (at 355.6 78.0284 0)
-      (effects (font (size 1.27 1.27)) (justify left bottom))
-    )
-    (property "Sheetfile" "power.kicad_sch" (at 355.6 83.1346 0)
-      (effects (font (size 1.27 1.27)) (justify left top))
-    )
-    (instances
-      (project "gpsrx"
-        (path "/c3c549bc-9d82-4b6a-bdb9-a3870905229d" (page "4"))
-      )
-    )
-  )
-
-  (sheet (at 351.79 67.31) (size 38.1 3.81) (fields_autoplaced)
-    (stroke (width 0.1524) (type solid))
-    (fill (color 0 0 0 0.0000))
-    (uuid 3652ad33-5463-42db-a556-b7970ca9c321)
-    (property "Sheetname" "Signal Connectors" (at 351.79 66.5984 0)
-      (effects (font (size 1.27 1.27)) (justify left bottom))
-    )
-    (property "Sheetfile" "connectors.kicad_sch" (at 351.79 71.7046 0)
-      (effects (font (size 1.27 1.27)) (justify left top))
-    )
-    (instances
-      (project "gpsrx"
-        (path "/c3c549bc-9d82-4b6a-bdb9-a3870905229d" (page "3"))
-      )
-    )
-  )
-
-  (sheet (at 356.87 43.18) (size 39.37 13.97) (fields_autoplaced)
-    (stroke (width 0.1524) (type solid))
-    (fill (color 0 0 0 0.0000))
-    (uuid 70e7e3a4-572d-4c59-9c26-94e3cd20e23c)
-    (property "Sheetname" "Clocks and GPS" (at 356.87 42.4684 0)
-      (effects (font (size 1.27 1.27)) (justify left bottom))
-    )
-    (property "Sheetfile" "clocks.kicad_sch" (at 356.87 57.7346 0)
-      (effects (font (size 1.27 1.27)) (justify left top))
-    )
-    (instances
-      (project "gpsrx"
-        (path "/c3c549bc-9d82-4b6a-bdb9-a3870905229d" (page "2"))
-      )
-    )
-  )
-
-  (sheet (at 358.14 96.52) (size 31.75 6.35) (fields_autoplaced)
-    (stroke (width 0.1524) (type solid))
-    (fill (color 0 0 0 0.0000))
-    (uuid 927dd695-6d3e-4555-8e99-f99aa71ecefd)
-    (property "Sheetname" "RF Frontend" (at 358.14 95.8084 0)
-      (effects (font (size 1.27 1.27)) (justify left bottom))
-    )
-    (property "Sheetfile" "rf_frontend.kicad_sch" (at 358.14 103.4546 0)
-      (effects (font (size 1.27 1.27)) (justify left top))
-    )
-    (instances
-      (project "gpsrx"
-        (path "/c3c549bc-9d82-4b6a-bdb9-a3870905229d" (page "5"))
-      )
-    )
-  )
-
-  (sheet (at 127 142.24) (size 52.07 10.16) (fields_autoplaced)
-    (stroke (width 0.1524) (type solid))
-    (fill (color 0 0 0 0.0000))
-    (uuid c578a973-c3ec-43d9-a435-a55d342147d7)
-    (property "Sheetname" "LTE Radio" (at 127 141.5284 0)
-      (effects (font (size 1.27 1.27)) (justify left bottom))
-    )
-    (property "Sheetfile" "lte_radio.kicad_sch" (at 127 152.9846 0)
-      (effects (font (size 1.27 1.27)) (justify left top))
-    )
-    (instances
-      (project "gpsrx"
-        (path "/c3c549bc-9d82-4b6a-bdb9-a3870905229d" (page "8"))
-      )
-    )
-  )
-
-  (sheet (at 330.2 185.42) (size 43.18 3.81) (fields_autoplaced)
-    (stroke (width 0.1524) (type solid))
-    (fill (color 0 0 0 0.0000))
-    (uuid c7ab4c42-2f90-4fd3-a6d5-50b84165476b)
-    (property "Sheetname" "DDC FPGA" (at 330.2 184.7084 0)
-      (effects (font (size 1.27 1.27)) (justify left bottom))
-    )
-    (property "Sheetfile" "ddc_fpga.kicad_sch" (at 330.2 189.8146 0)
-      (effects (font (size 1.27 1.27)) (justify left top))
-    )
-    (instances
-      (project "gpsrx"
-        (path "/c3c549bc-9d82-4b6a-bdb9-a3870905229d" (page "7"))
-      )
-    )
-  )
-
-  (sheet (at 323.85 162.56) (size 39.37 3.81) (fields_autoplaced)
-    (stroke (width 0.1524) (type solid))
-    (fill (color 0 0 0 0.0000))
-    (uuid cfc19a79-2a34-431b-9452-a8a8f8302b67)
-    (property "Sheetname" "MCU" (at 323.85 161.8484 0)
-      (effects (font (size 1.27 1.27)) (justify left bottom))
-    )
-    (property "Sheetfile" "mcu.kicad_sch" (at 323.85 166.9546 0)
-      (effects (font (size 1.27 1.27)) (justify left top))
-    )
-    (instances
-      (project "gpsrx"
-        (path "/c3c549bc-9d82-4b6a-bdb9-a3870905229d" (page "6"))
-      )
-    )
-  )
-
-  (sheet_instances
-    (path "/" (page "1"))
-  )
+(kicad_sch
+	(version 20231120)
+	(generator "eeschema")
+	(generator_version "8.0")
+	(uuid "c3c549bc-9d82-4b6a-bdb9-a3870905229d")
+	(paper "USLedger")
+	(title_block
+		(title "GPS Locked RX")
+		(date "2024-01-28")
+		(rev "0")
+		(company "Ben Gelb")
+	)
+	(lib_symbols)
+	(sheet
+		(at 355.6 78.74)
+		(size 12.7 3.81)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "1b4527d9-1a53-4872-9983-970267f23268")
+		(property "Sheetname" "Power"
+			(at 355.6 78.0284 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "power.kicad_sch"
+			(at 355.6 83.1346 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "gpsrx"
+				(path "/c3c549bc-9d82-4b6a-bdb9-a3870905229d"
+					(page "4")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 351.79 67.31)
+		(size 38.1 3.81)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "3652ad33-5463-42db-a556-b7970ca9c321")
+		(property "Sheetname" "Signal Connectors"
+			(at 351.79 66.5984 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "connectors.kicad_sch"
+			(at 351.79 71.7046 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "gpsrx"
+				(path "/c3c549bc-9d82-4b6a-bdb9-a3870905229d"
+					(page "3")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 356.87 43.18)
+		(size 39.37 13.97)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "70e7e3a4-572d-4c59-9c26-94e3cd20e23c")
+		(property "Sheetname" "Clocks and GPS"
+			(at 356.87 42.4684 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "clocks.kicad_sch"
+			(at 356.87 57.7346 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "gpsrx"
+				(path "/c3c549bc-9d82-4b6a-bdb9-a3870905229d"
+					(page "2")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 358.14 96.52)
+		(size 31.75 6.35)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "927dd695-6d3e-4555-8e99-f99aa71ecefd")
+		(property "Sheetname" "RF Frontend"
+			(at 358.14 95.8084 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "rf_frontend.kicad_sch"
+			(at 358.14 103.4546 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "gpsrx"
+				(path "/c3c549bc-9d82-4b6a-bdb9-a3870905229d"
+					(page "5")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 127 142.24)
+		(size 52.07 10.16)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "c578a973-c3ec-43d9-a435-a55d342147d7")
+		(property "Sheetname" "LTE Radio"
+			(at 127 141.5284 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "lte_radio.kicad_sch"
+			(at 127 152.9846 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "gpsrx"
+				(path "/c3c549bc-9d82-4b6a-bdb9-a3870905229d"
+					(page "8")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 330.2 185.42)
+		(size 43.18 3.81)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "c7ab4c42-2f90-4fd3-a6d5-50b84165476b")
+		(property "Sheetname" "DDC FPGA"
+			(at 330.2 184.7084 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "ddc_fpga.kicad_sch"
+			(at 330.2 189.8146 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "gpsrx"
+				(path "/c3c549bc-9d82-4b6a-bdb9-a3870905229d"
+					(page "7")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 323.85 162.56)
+		(size 39.37 3.81)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "cfc19a79-2a34-431b-9452-a8a8f8302b67")
+		(property "Sheetname" "MCU"
+			(at 323.85 161.8484 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "mcu.kicad_sch"
+			(at 323.85 166.9546 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "gpsrx"
+				(path "/c3c549bc-9d82-4b6a-bdb9-a3870905229d"
+					(page "6")
+				)
+			)
+		)
+	)
+	(sheet_instances
+		(path "/"
+			(page "1")
+		)
+	)
 )
