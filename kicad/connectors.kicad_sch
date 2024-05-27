@@ -2246,7 +2246,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "MountingHole_3.2mm_M3_Pad"
+		(property "Value" "MountingHole_Pad"
 			(at 53.34 208.2799 0)
 			(effects
 				(font
@@ -3283,7 +3283,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "MountingHole_3.2mm_M3_Pad"
+		(property "Value" "MountingHole_Pad"
 			(at 53.34 231.1399 0)
 			(effects
 				(font
@@ -3486,7 +3486,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "MountingHole_3.2mm_M3_Pad"
+		(property "Value" "MountingHole_Pad"
 			(at 53.34 219.7099 0)
 			(effects
 				(font
@@ -3623,7 +3623,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "MountingHole_3.2mm_M3_Pad"
+		(property "Value" "MountingHole_Pad"
 			(at 53.34 196.8499 0)
 			(effects
 				(font
